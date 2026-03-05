@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer"
 import { useLanguage } from "@/lib/i18n/language-context"
 import { Award, Shield, Heart } from "lucide-react"
 
+
 export default function AboutPage() {
   const { t } = useLanguage()
 
