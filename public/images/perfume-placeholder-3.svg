@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" fill="none">
+  <defs>
+    <linearGradient id="glass3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0ebe6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d9d2cb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="liquid3" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#2d1f14;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#6b4423;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  <!-- Square cap -->
+  <rect x="72" y="15" width="56" height="45" rx="6" fill="#1a1a1a"/>
+  <rect x="80" y="5" width="40" height="15" rx="2" fill="#0d0d0d"/>
+  <!-- Straight neck -->
+  <rect x="85" y="60" width="30" height="55" fill="url(#glass3)" stroke="#bbb" stroke-width="1"/>
+  <rect x="87" y="80" width="26" height="35" fill="url(#liquid3)"/>
+  <!-- Rectangular body -->
+  <rect x="60" y="115" width="80" height="165" rx="8" fill="url(#glass3)" stroke="#bbb" stroke-width="1"/>
+  <rect x="65" y="120" width="70" height="155" rx="6" fill="url(#liquid3)" opacity="0.9"/>
+</svg>
