@@ -49,6 +49,11 @@ export interface Brand {
   productCount: number
 }
 
+/** Deterministic pseudo-random from id - avoids hydration mismatch (server vs client) */
+function deterministicFromId(id: number, max: number, min = 0) {
+  return min + ((id * 2654435761) % (max - min + 1))
+}
+
 function createProduct(
   id: number,
   name: string,
@@ -63,11 +68,11 @@ function createProduct(
     brand,
     brandSlug: slugify(brand),
     categorySlug: category,
-    price: options?.price ?? Math.round((30 + Math.random() * 200) * 100) / 100,
+    price: options?.price ?? Math.round((30 + deterministicFromId(id, 200)) * 100) / 100,
     originalPrice: options?.originalPrice,
     image: options?.image ?? productImages[id % productImages.length],
-    rating: options?.rating ?? 3 + Math.round(Math.random() * 2),
-    reviews: options?.reviews ?? Math.floor(10 + Math.random() * 200),
+    rating: options?.rating ?? 3 + (deterministicFromId(id, 2)),
+    reviews: options?.reviews ?? 10 + deterministicFromId(id, 190),
     freeDelivery: options?.freeDelivery,
     returnWithin30Days: options?.returnWithin30Days,
     description: options?.description,
