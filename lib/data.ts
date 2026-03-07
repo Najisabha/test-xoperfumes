@@ -1,23 +1,3 @@
-const productImages = [
-  "/images/product-1.jpg",
-  "/images/product-2.jpg",
-  "/images/product-3.jpg",
-  "/images/product-4.jpg",
-  "/images/product-5.jpg",
-  "/images/perfume-placeholder-1.svg",
-  "/images/perfume-placeholder-2.svg",
-  "/images/perfume-placeholder-3.svg",
-]
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/--+/g, "-")
-    .trim()
-}
-
 export interface Product {
   id: number
   slug: string
@@ -47,36 +27,6 @@ export interface Brand {
   name: string
   logo: string
   productCount: number
-}
-
-/** Deterministic pseudo-random from id - avoids hydration mismatch (server vs client) */
-function deterministicFromId(id: number, max: number, min = 0) {
-  return min + ((id * 2654435761) % (max - min + 1))
-}
-
-function createProduct(
-  id: number,
-  name: string,
-  brand: string,
-  category: string,
-  options?: Partial<Product>
-): Product {
-  return {
-    id,
-    slug: slugify(`${brand}-${name}`),
-    name,
-    brand,
-    brandSlug: slugify(brand),
-    categorySlug: category,
-    price: options?.price ?? Math.round((30 + deterministicFromId(id, 200)) * 100) / 100,
-    originalPrice: options?.originalPrice,
-    image: options?.image ?? productImages[id % productImages.length],
-    rating: options?.rating ?? 3 + (deterministicFromId(id, 2)),
-    reviews: options?.reviews ?? 10 + deterministicFromId(id, 190),
-    freeDelivery: options?.freeDelivery,
-    returnWithin30Days: options?.returnWithin30Days,
-    description: options?.description,
-  }
 }
 
 export const CATEGORIES: Category[] = [
@@ -109,98 +59,26 @@ export const BRANDS: Brand[] = [
   { slug: "charlotte-tilbury", name: "Charlotte Tilbury", logo: "/images/cat-gifts.jpg", productCount: 22 },
 ]
 
-const ALL_PRODUCTS: Product[] = [
-  createProduct(1, "Sauvage Eau de Parfum", "Dior", "men", {
-    price: 189,
-    originalPrice: 280,
-    freeDelivery: true,
-    returnWithin30Days: true,
-    rating: 4.8,
-    reviews: 124,
-  }),
-  createProduct(2, "Bleu de Chanel", "Chanel", "men", {
-    price: 145,
-    originalPrice: 180,
-    freeDelivery: true,
-    returnWithin30Days: true,
-  }),
-  createProduct(3, "Acqua di Gio Profumo", "Armani", "men", {
-    price: 165,
-    originalPrice: 220,
-    freeDelivery: true,
-  }),
-  createProduct(4, "Eros Eau de Toilette", "Versace", "men", { price: 95, freeDelivery: true }),
-  createProduct(5, "La Vie Est Belle", "Lancome", "women", {
-    price: 178,
-    originalPrice: 250,
-    freeDelivery: true,
-    returnWithin30Days: true,
-  }),
-  createProduct(6, "Black Opium", "YSL", "women", { price: 132, freeDelivery: true }),
-  createProduct(7, "Oud Wood Intense", "Tom Ford", "unisex", {
-    price: 245,
-    originalPrice: 320,
-    freeDelivery: true,
-    returnWithin30Days: true,
-  }),
-  createProduct(8, "Good Girl", "Carolina Herrera", "women", { price: 158 }),
-  createProduct(9, "Aventus For Her", "Creed", "women", {
-    price: 320,
-    originalPrice: 400,
-    freeDelivery: true,
-  }),
-  createProduct(10, "Tobacco Vanille", "Tom Ford", "unisex", {
-    price: 285,
-    originalPrice: 350,
-    freeDelivery: true,
-  }),
-  createProduct(11, "Baccarat Rouge 540", "MFK", "unisex", {
-    price: 265,
-    originalPrice: 330,
-    freeDelivery: true,
-  }),
-  createProduct(12, "Lost Cherry", "Tom Ford", "women", { price: 295 }),
-  createProduct(13, "Rose Gold Body Mist", "XO Collection", "body-care", {
-    price: 45,
-    freeDelivery: true,
-    returnWithin30Days: true,
-  }),
-  createProduct(14, "Amber Oud Deodorant", "Arabian Essence", "body-care", {
-    price: 35,
-    freeDelivery: true,
-  }),
-  createProduct(15, "Classic Musk EDT", "XO Basics", "men", { price: 28, returnWithin30Days: true }),
-  createProduct(16, "Fresh Citrus Splash", "Fresh Line", "unisex", { price: 32 }),
-  createProduct(17, "Libre Intense", "YSL", "women", { price: 195 }),
-  createProduct(18, "Flowerbomb Nectar", "Viktor&Rolf", "women", { price: 175 }),
-  createProduct(19, "J'adore Infinissime", "Dior", "women", { price: 165 }),
-  createProduct(20, "Stronger With You", "Armani", "men", { price: 145 }),
-]
+import * as productsStore from "./admin-products-store"
 
 export function getAllProducts(): Product[] {
-  return ALL_PRODUCTS
+  return productsStore.getAllProducts()
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
-  return ALL_PRODUCTS.find((p) => p.slug === slug)
+  return productsStore.getProductBySlug(slug)
 }
 
 export function getProductsByCategory(categorySlug: string): Product[] {
-  return ALL_PRODUCTS.filter((p) => p.categorySlug === categorySlug)
+  return productsStore.getProductsByCategory(categorySlug)
 }
 
 export function getProductsByBrand(brandSlug: string): Product[] {
-  return ALL_PRODUCTS.filter((p) => p.brandSlug === brandSlug)
+  return productsStore.getProductsByBrand(brandSlug)
 }
 
 export function searchProducts(query: string): Product[] {
-  const q = query.toLowerCase().trim()
-  if (!q) return ALL_PRODUCTS
-  return ALL_PRODUCTS.filter(
-    (p) =>
-      p.name.toLowerCase().includes(q) ||
-      p.brand.toLowerCase().includes(q)
-  )
+  return productsStore.searchProducts(query)
 }
 
 export function getCategoryBySlug(slug: string): Category | undefined {
@@ -212,14 +90,26 @@ export function getBrandBySlug(slug: string): Brand | undefined {
 }
 
 export function getRelatedProducts(product: Product, limit = 4): Product[] {
-  return ALL_PRODUCTS.filter(
-    (p) =>
-      p.id !== product.id &&
-      (p.brandSlug === product.brandSlug || p.categorySlug === product.categorySlug)
-  ).slice(0, limit)
+  return productsStore.getRelatedProducts(product, limit)
 }
 
-export const bestSellers = ALL_PRODUCTS.slice(0, 8)
-export const everythingYouNeed = ALL_PRODUCTS.slice(8, 16)
-export const budgetPicks = ALL_PRODUCTS.slice(12, 20)
-export const mostViewed = ALL_PRODUCTS.slice(4, 12)
+export function getBestSellers(): Product[] {
+  return productsStore.getAllProducts().slice(0, 8)
+}
+
+export function getEverythingYouNeed(): Product[] {
+  return productsStore.getAllProducts().slice(8, 16)
+}
+
+export function getBudgetPicks(): Product[] {
+  return productsStore.getAllProducts().slice(12, 20)
+}
+
+export function getMostViewed(): Product[] {
+  return productsStore.getAllProducts().slice(4, 12)
+}
+
+export const bestSellers = getBestSellers()
+export const everythingYouNeed = getEverythingYouNeed()
+export const budgetPicks = getBudgetPicks()
+export const mostViewed = getMostViewed()

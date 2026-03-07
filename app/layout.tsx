@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from '@/lib/i18n/language-context'
 import { CartProvider } from '@/lib/cart-context'
+import { HydrationFix } from '@/components/hydration-fix'
 import './globals.css'
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -46,6 +47,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={`${plusJakarta.variable} ${cormorant.variable} ${tajawal.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased" suppressHydrationWarning>
+        <HydrationFix />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -19,6 +21,9 @@ import { useLanguage } from "@/lib/i18n/language-context"
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const { t } = useLanguage()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const redirectTo = searchParams.get("redirect") || "/account"
 
   const identifierSchema = z
     .string()
@@ -60,10 +65,14 @@ export default function LoginPage() {
 
   const onLogin = (data: LoginForm) => {
     console.log("Login", data)
+    // TODO: Set auth-token cookie when real auth is implemented
+    router.push(redirectTo)
   }
 
   const onSignup = (data: SignupForm) => {
     console.log("Signup", data)
+    // TODO: Set auth-token cookie when real auth is implemented
+    router.push(redirectTo)
   }
 
   const handleSocialLogin = (provider: string) => {
