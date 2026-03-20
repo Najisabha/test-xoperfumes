@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server"
 import { ADMIN_COOKIE, ADMIN_TOKEN } from "@/lib/admin-auth"
 
 
-
 const AUTH_COOKIE = "auth-token"
 
 function isAuthenticated(request: NextRequest): boolean {
